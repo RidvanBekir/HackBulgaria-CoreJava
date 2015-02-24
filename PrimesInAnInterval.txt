@@ -1,0 +1,60 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class PrimesInAnInterval {
+
+	public static void main(String[] args) {
+		try {
+			Scanner sc = new Scanner(System.in);
+			System.out
+					.print("Enter number for the beginning of the interval: ");
+			int beginning = sc.nextInt();
+			System.out.println("Enter number for the end of the interval: ");
+			int end = sc.nextInt();
+			sc.close();
+			String result = primesInAnInterval(beginning, end);
+			System.out.println("The prime numbers in the interval[" + beginning
+					+ "," + end + "] are: " + result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static String primesInAnInterval(int from, int to) {
+		String message = new String("Invalid input");
+		String result = null;
+		int lenght = to - from;
+		ArrayList<Integer> interval = null;
+		if (lenght > 0 && from > 0 && to > 0) {
+			interval = new ArrayList<Integer>(lenght);
+
+			for (int i = 0; i < lenght; i++) {
+				int number = from + i;
+				if (isPrime(number) == true) {
+					interval.add(number);
+				}
+			}
+		} else {
+			return message;
+		}
+		result = Converter(interval);
+		return result;
+	}
+
+	public static boolean isPrime(int number) {
+		for (int i = 2; i < number; i++) {
+			if (number % i == 0)
+				return false;
+		}
+		return true;
+	}
+
+	public static String Converter(ArrayList<Integer> obj) {
+
+		String listString = "";
+		for (int s : obj) {
+			listString += s + " ";
+		}
+		return listString;
+	}
+}

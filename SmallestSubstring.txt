@@ -1,0 +1,83 @@
+import java.util.ArrayList;
+
+public class SmallestSubstringInString {
+
+	public static void main(String[] args) {
+
+		String str = "abcdefghijklmn124345678!@#$%^&*opqrstuvwxyz!*abcdefghijklmn";
+		SmallestSubstringContainingTheAlphabet(str);
+
+	}
+
+	public static void SmallestSubstringContainingTheAlphabet(String input) {
+
+		ArrayList<String> alphabets = new ArrayList<String>();
+		String target = "abcdefghijklmnopqrstuvwxyz";
+		int smallestWindowLength = Integer.MAX_VALUE;
+		int required[] = new int[256];
+		int hasFound[] = new int[256];
+
+		for (int i = 0; i < target.length(); i++) {
+			required[target.charAt(i)]++;
+		}
+
+		char firstChar = 0;
+		int beginning = -1;
+		int totalRequired = 0;
+
+		for (int i = 0; i < input.length();) {
+			char current = input.charAt(i);
+			while (required[current] <= 0 && i < input.length()) {
+				i++;
+				if (i < input.length())
+					current = input.charAt(i);
+				continue;
+			}
+
+			hasFound[current]++;
+			if (required[current] >= hasFound[current])
+				totalRequired++;
+			if (beginning == -1) {
+				firstChar = current;
+				beginning = i;
+			} else {
+				if (current == firstChar) {
+					while (beginning < input.length() - 1
+							&& (hasFound[firstChar] > required[firstChar] || required[firstChar] <= 0)) {
+						if (required[firstChar] > 0) {
+							hasFound[firstChar]--;
+						}
+						beginning++;
+						firstChar = input.charAt(beginning);
+					}
+				}
+			}
+
+			if (totalRequired == target.length()) {
+				int windowLenth = i - beginning + 1;
+				if (smallestWindowLength > windowLenth) {
+
+					smallestWindowLength = windowLenth;
+					alphabets.add(input.substring(beginning, i + 1));
+				}
+			}
+			i++;
+		}
+		compareSubstringsAndPrint(alphabets);
+	}
+
+	public static void compareSubstringsAndPrint(ArrayList<String> alphabets) {
+
+		String result = null;
+		int smallestSubstringLength = Integer.MAX_VALUE;
+		for (int i = 0; i < alphabets.size(); i++) {
+			if (smallestSubstringLength > alphabets.get(i).length()) {
+
+				smallestSubstringLength = alphabets.get(i).length();
+				result = alphabets.get(i);
+
+			}
+		}
+		System.out.println("The smallest substring is: " + result);
+	}
+}

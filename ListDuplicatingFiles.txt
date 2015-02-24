@@ -1,0 +1,81 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.ArrayList;
+
+public class ListDuplicatingFiles {
+
+	public static void main(String[] args) {
+
+		String dir = "C:\\Users\\Ridvan\\Downloads";
+		listDuplicatingFiles(dir);
+
+	}
+
+	public static void listDuplicatingFiles(String dir) {
+		ArrayList<File> files = new ArrayList<File>();
+		File directory = new File(dir);
+		File[] fList = directory.listFiles();
+		try {
+			for (File file : fList) {
+				if (file.isFile()) {
+					files.add(file);
+				} else if (file.isDirectory()) {
+					listDuplicatingFiles(file.getAbsolutePath());
+				}
+			}
+		} catch (NullPointerException e) {
+			System.err.println("Directory does not exist!");
+		}
+		findDuplicateFiles(files);
+	}
+
+	public static void findDuplicateFiles(ArrayList<File> files) {
+		for (int i = 0; i < files.size(); i++) {
+			for (int k = 0; k < files.size(); k++) {
+				if (i != k) {
+					try {
+						if (compareFiles(files.get(i), files.get(k)) == 1) {
+							files.remove(k);
+						}
+
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		printResult(files);
+	}
+
+	public static int compareFiles(File file1, File file2) throws Exception {
+
+		FileReader FR1 = new FileReader(file1);
+		FileReader FR2 = new FileReader(file2);
+
+		BufferedReader BR1 = new BufferedReader(FR1);
+		BufferedReader BR2 = new BufferedReader(FR2);
+
+		String line1 = null;
+		String line2 = null;
+		int flag = 1;
+		while ((flag == 1) && ((line1 = BR1.readLine()) != null)
+				&& ((line2 = BR2.readLine()) != null)) {
+			if (!line1.equalsIgnoreCase(line2))
+				flag = 0;
+			else
+				flag = 1;
+		}
+		BR1.close();
+		BR2.close();
+		return flag;
+
+	}
+
+	public static void printResult(ArrayList<File> files) {
+		for (File file : files) {
+			System.out.print(file.getName() + ";  ");
+		}
+	}
+	
+}
